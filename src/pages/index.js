@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import PopUpChat from './c1';
+import PopUpChat from './c1'; 
 import Head from 'next/head';
-
 const UserSearch = () => {
   const [searchText, setSearchText] = useState('');
   const [users, setUsers] = useState([]);
@@ -20,6 +19,7 @@ const UserSearch = () => {
           const response = await fetch(`https://api.github.com/search/users?q=${searchText}`);
           const data = await response.json();
 
+          
           const usersWithFollowers = await Promise.all(
             data.items.map(async (user) => {
               const followerResponse = await fetch(user.followers_url);
@@ -88,14 +88,15 @@ const UserSearch = () => {
         <thead>
           <tr>
             <th>Serial Number</th>
-            <th>Profile Image and Name</th>
+            <th>Profile Image</th>
+            <th>Name</th>
             <th>Profile Link</th>
           </tr>
         </thead>
         <tbody>
           {isLoading ? (
             <tr>
-              <td colSpan="3">Data is Fetching...</td>
+              <td colSpan="4">Data is Fetching...</td>
             </tr>
           ) : Array.isArray(usersOnCurrentPage) && usersOnCurrentPage.length > 0 ? (
             usersOnCurrentPage.map((user, index) => (
@@ -108,6 +109,10 @@ const UserSearch = () => {
                       alt={`${user.login} avatar`}
                       className="avatar"
                     />
+                  </a>
+                </td>
+                <td>
+                  <a href={user.html_url} target="_blank" rel="noopener noreferrer">
                     {user.login}
                   </a>
                 </td>
@@ -120,7 +125,7 @@ const UserSearch = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="3">
+              <td colSpan="4">
                 {users === null ? 'Loading...' : 'No users found. Please Refresh the Page & Try Again...'}
               </td>
             </tr>
@@ -279,4 +284,3 @@ const UserSearch = () => {
 };
 
 export default UserSearch;
-
